@@ -1,0 +1,8 @@
+{
+  "hosting": {
+    "public": ".",
+    "ignore": ["firebase.json", ".firebaserc", "README.md", "index.Claircut", "work/**", "outputs/**", "**/.*", "**/node_modules/**"],
+    "cleanUrls": true,
+    "headers": [{"source": "**/*.html", "headers": [{"key": "Cache-Control", "value": "no-cache"}]}]
+  }
+}
