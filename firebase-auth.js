@@ -6,6 +6,8 @@ const billingModal = document.getElementById("billing-modal");
 const authStatus = document.getElementById("auth-status");
 const googleButton = document.getElementById("google-signin");
 const paymentLink = window.CLAIRCUT_PAYMENT_LINK || "";
+const CREATOR_EMAIL = "vayloia.contact@gmail.com";
+const subscribeButton = document.getElementById("subscribe-open");
 
 function openModal(modal) {
   document.querySelectorAll(".modal.open").forEach(item => item.classList.remove("open"));
@@ -58,10 +60,23 @@ if (!config?.apiKey || !config?.appId) {
       }
     });
     onAuthStateChanged(auth, user => {
+      const isCreator = user?.email?.toLowerCase() === CREATOR_EMAIL;
       if (user) {
-        authStatus.textContent = "Connecté avec " + (user.displayName || user.email) + ". Ton compte reste gratuit.";
-        googleButton.textContent = "Connecté avec Google";
+        authStatus.textContent = isCreator
+          ? "Connecté en tant que créateur Vaylo IA. Accès créateur sans abonnement."
+          : "Connecté avec " + (user.displayName || user.email) + ". Ton compte reste gratuit.";
+        googleButton.textContent = isCreator ? "Créateur connecté" : "Connecté avec Google";
         googleButton.disabled = true;
+        if (isCreator && subscribeButton) {
+          subscribeButton.textContent = "Accès créateur actif";
+          subscribeButton.disabled = true;
+          subscribeButton.removeAttribute("data-open");
+        }
+        closeModal(authModal);
+      } else {
+        authStatus.textContent = "Connecte-toi avec Google. Le compte créateur est reconnu par son adresse Google.";
+        googleButton.textContent = "Continuer avec Google";
+        googleButton.disabled = false;
       }
     });
   } catch {
